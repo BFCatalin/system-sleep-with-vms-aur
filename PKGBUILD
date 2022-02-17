@@ -1,30 +1,16 @@
-# Maintainer: Catalin Boldan <me@kstep.me>
+# Maintainer: Catalin Boldan <catalin.boldan@gmail.com>
 pkgname=system-sleep-with-vms
-pkgver=1.0
+pkgver=1.1
 pkgrel=1
-pkgdesc=""
-arch=('x86_64')
+pkgdesc="Qemu guest suspend and resume if the host systems gets suspended/resumed."
+arch=('any')
 url="https://github.com/BFCatalin/system-sleep-with-vms"
 license=('GPL2')
-#groups=()
 depends=(libvirt)
 makedepends=('git')
-#optdepends=()
-#provides=()
-#conflicts=()
-#replaces=()
-#backup=()
-#options=()
-#install=
-#changelog=
-source=($pkgname::git+https://github.com/BFCatalin/system-sleep-with-vms)
+source=("$pkgname::git+https://github.com/BFCatalin/system-sleep-with-vms")
 noextract=()
-md5sums=() #generate with 'makepkg -g'
-
-pkgver() {
-	cd "$srcdir/system-sleep-with-vms"
-	git log -1 --format="%cd" --date=short | sed 's|-||g'
-}
+sha256sums=('SKIP')
 
 build() {
   cd "$pkgname"
@@ -32,6 +18,8 @@ build() {
 
 package() {
   cd "$pkgname"
-	install -Dm755 ./root-resume.service "$pkgdir/lib/systemd/system"
-  install -Dm755 ./root-suspend.service "$pkgdir/lib/systemd/system"
+  install -Dm755 ./system-sleep-resume-suspended "$pkgdir/usr/bin/system-sleep-resume-suspended"
+  install -Dm755 ./system-sleep-suspend-running "$pkgdir/usr/bin/system-sleep-suspend-running"
+	install -Dm644 ./root-resume.service "$pkgdir/usr/lib/systemd/system/root-resume.service"
+  install -Dm644 ./root-suspend.service "$pkgdir/usr/lib/systemd/system/root-suspend.service"
 }
